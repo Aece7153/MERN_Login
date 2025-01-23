@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import getUserInfo from '../../utilities/decodeJwt';
 import axios from 'axios';
 import { Row, Col, Container, Button, ButtonGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 function Alerts() {
-  const [alerts, setAlerts] = useState([]);  // Store alerts data
-  const [error, setError] = useState(null);  // Store error message
+  const [user, setUser] = useState(null); // Initialize as null (not logged in)
+  const [alerts, setAlerts] = useState([]); // Store alerts data
+  const [error, setError] = useState(null); // Store error message
   const [activeTab, setActiveTab] = useState({}); // Track active tab (Alert or Reason) for each card
-  const navigate = useNavigate();
 
-  // Check if the user is authenticated
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      navigate('/login'); // If no token, redirect to login page
-    } else {
-      async function fetchData() {
-        try {
-          const result = await axios(
-            'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE'
-          );
-          setAlerts(result.data.data);  // Set fetched alerts data
-        } catch (err) {
-          setError('Failed to fetch alerts. Please try again later.');  // Handle API errors
-        }
+    // Fetch user information
+    const userInfo = getUserInfo();
+    setUser(userInfo);
+
+    // Fetch alerts data
+    async function fetchData() {
+      try {
+        const result = await axios(
+          'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE'
+        );
+        setAlerts(result.data.data); // Set fetched alerts data
+      } catch (err) {
+        setError('Failed to fetch alerts. Please try again later.'); // Handle API errors
       }
-      fetchData();
     }
-  }, [navigate]);
+    fetchData();
+  }, []);
 
   // Function to render an image if available
   const renderImage = (imageUrl) => {
@@ -51,12 +50,27 @@ function Alerts() {
     setActiveTab((prevState) => ({ ...prevState, [id]: tab }));
   };
 
-  if (!alerts.length && !error) {
-    return <div className="text-center text-light">Loading...</div>;
+  // If the user is not logged in, show a login message
+  if (!user) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: '100vh', backgroundColor: '#0c0c1f' }}
+      >
+        <Card className="text-center bg-secondary text-light p-4" style={{ maxWidth: '500px' }}>
+          <Card.Body>
+            <h4 className="text-warning" style={{ fontSize: '2rem' }}>
+              Log in to view this page.
+            </h4>
+          </Card.Body>
+        </Card>
+      </div>
+    );
   }
 
+  // If the user is logged in, show the alerts page
   return (
-    <Container fluid className="bg-dark text-light py-4">
+    <Container fluid style={{ backgroundColor: '#0c0c1f', color: 'white' }} className="py-4">
       <h1 className="text-warning text-center mb-4">Alerts</h1>
       {error && <div className="alert alert-danger">{error}</div>}
       <Row>

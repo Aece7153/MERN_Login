@@ -17,6 +17,7 @@ const Login = () => {
   const [bgColor, setBgColor] = useState(SECONDARY_COLOR);
   const [bgText, setBgText] = useState('Light Mode')
   const navigate = useNavigate();
+  
 
   let labelStyling = {
     color: PRIMARY_COLOR,

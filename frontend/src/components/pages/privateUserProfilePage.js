@@ -15,21 +15,26 @@ const HomePage = () => {
     };
 
     useEffect(() => {
-        // Set the background color of the entire page to gray
-        document.body.style.backgroundColor = "#212429"; // Set gray background for the body
-        document.body.style.color = "black"; // Ensure text color is readable on gray background
+        // Set the background color of the entire page to blue
+        document.body.style.backgroundColor = "#0c0c1f"; // Set blue background for the body
 
         setUser(getUserInfo());
-    }, []); // Only runs on component mount
+    }, []);
 
     if (!user) return (
-        <div><h4>Log in to view this page.</h4></div>
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
+            <Card className="text-center bg-secondary text-light " style={{ width: '100%', maxWidth: '500px' }}>
+                <Card.Body>
+                    <h4 style={{ fontSize: '2.5rem', color: '#FFA500' }}>Log in to view this page.</h4>
+                </Card.Body>
+            </Card>
+        </div>
     );
 
     const { id, email, username } = user;
 
     return (
-        <div className="bg-dark text-light py-4">
+        <div className="color: #FFA500 text-light py-4">
             <Card className="h-100 bg-secondary text-light border-light card">
                 <Card.Body>
                     <Card.Text>

@@ -1,36 +1,62 @@
 import React, { useEffect, useState } from "react";
-import getUserInfo from '../utilities/decodeJwt';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import ReactNavbar from 'react-bootstrap/Navbar';
+import getUserInfo from "../utilities/decodeJwt";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import ReactNavbar from "react-bootstrap/Navbar";
 
-
-// Here, we display our Navbar
+// Navbar Component
 export default function Navbar() {
-  // We are pulling in the user's info but not using it for now.
-  // Warning disabled: 
-  // eslint-disable-next-line
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-  setUser(getUserInfo())
-  }, [])
-  
-  // if (!user) return null   - for now, let's show the bar even not logged in.
-  // we have an issue with getUserInfo() returning null after a few minutes
-  // it seems.
+    setUser(getUserInfo()); // Fetch and set user info on component mount
+  }, []);
+
   return (
     <ReactNavbar bg="dark" variant="dark">
-    <Container>
-      <Nav className="me-auto">
-        <Nav.Link href="/">Start</Nav.Link>
-        <Nav.Link href="/home">Home</Nav.Link>
-        <Nav.Link href="/mbtaAlerts">MBTA Alerts</Nav.Link>
-        <Nav.Link href="/swagger">Swagger</Nav.Link>
-        <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
-      </Nav>
-    </Container>
-  </ReactNavbar>
+      <Container>
+        {/* Left-Aligned Links */}
+        <Nav>
+          {/* Conditionally render Login button if user is not logged in */}
+           
+            <Nav.Link
+              href="/"
+              className="bg-secondary text-light rounded px-3 py-1 mx-1"
+            >
+              Login
+            </Nav.Link>
+            
+          
+          <Nav.Link
+            href="/home"
+            className="bg-secondary text-light rounded px-3 py-1 mx-1"
+          >
+            Home
+          </Nav.Link>
+        </Nav>
 
+        {/* Right-Aligned Links */}
+        <Nav className="ms-auto">
+          <Nav.Link
+            href="/swagger"
+            className="bg-secondary text-light rounded px-3 py-1 mx-1"
+          >
+            Swagger
+          </Nav.Link>
+          <Nav.Link
+            href="/mbtaAlerts"
+            className="bg-secondary text-light rounded px-3 py-1 mx-1"
+          >
+            MBTA Alerts
+          </Nav.Link>
+          <Nav.Link
+            href="/privateUserProfile"
+            className="bg-secondary text-light rounded px-3 py-1 mx-1"
+          >
+            Profile
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </ReactNavbar>
   );
 }

@@ -7,7 +7,6 @@ import './index.css';
 // We import all the components we need in our app
 import MbtaAlertsPage from "./components/pages/mbtaAlerts";
 import Navbar from "./components/navbar";
-import LandingPage from "./components/pages/landingPage";
 import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";

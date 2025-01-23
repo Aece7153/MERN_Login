@@ -2,25 +2,33 @@ import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 import { Row, Col, Container, Button, ButtonGroup } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function Alerts() {
   const [alerts, setAlerts] = useState([]);  // Store alerts data
   const [error, setError] = useState(null);  // Store error message
   const [activeTab, setActiveTab] = useState({}); // Track active tab (Alert or Reason) for each card
+  const navigate = useNavigate();
 
+  // Check if the user is authenticated
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const result = await axios(
-          'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE'
-        );
-        setAlerts(result.data.data);  // Set fetched alerts data
-      } catch (err) {
-        setError('Failed to fetch alerts. Please try again later.');  // Handle API errors
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      navigate('/login'); // If no token, redirect to login page
+    } else {
+      async function fetchData() {
+        try {
+          const result = await axios(
+            'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE'
+          );
+          setAlerts(result.data.data);  // Set fetched alerts data
+        } catch (err) {
+          setError('Failed to fetch alerts. Please try again later.');  // Handle API errors
+        }
       }
+      fetchData();
     }
-    fetchData();
-  }, []); // Fetch data on component mount
+  }, [navigate]);
 
   // Function to render an image if available
   const renderImage = (imageUrl) => {
@@ -42,6 +50,10 @@ function Alerts() {
   const handleTabChange = (id, tab) => {
     setActiveTab((prevState) => ({ ...prevState, [id]: tab }));
   };
+
+  if (!alerts.length && !error) {
+    return <div className="text-center text-light">Loading...</div>;
+  }
 
   return (
     <Container fluid className="bg-dark text-light py-4">

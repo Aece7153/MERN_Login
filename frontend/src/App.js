@@ -14,6 +14,7 @@ import Signup from "./components/pages/registerPage";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
 import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
+import Swagger from "./components/pages/swagger"
 
 export const UserContext = createContext();
 //test change
@@ -30,12 +31,12 @@ const App = () => {
       <Navbar />
       <UserContext.Provider value={user}>
         <Routes>
-          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/" element={<Login />} />
           <Route exact path="/home" element={<HomePage />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/mbtaAlerts" element={<MbtaAlertsPage />} />
-          <Route exact path="/swagger" element={<swagger />} />
+          <Route exact path="/swagger" element={<Swagger />} />
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
         </Routes>
       </UserContext.Provider>

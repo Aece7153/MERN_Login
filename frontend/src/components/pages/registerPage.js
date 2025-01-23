@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-const PRIMARY_COLOR = "#cc5c99";
+const PRIMARY_COLOR = "#FFA500";
 const SECONDARY_COLOR = "#0c0c1f";
 const url = `${process.env.REACT_APP_BACKEND_SERVER_URI}/user/signup`;
+
 const Register = () => {
   const [data, setData] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
@@ -42,19 +43,20 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the form's default behavior
     try {
-      const { response: res } = await axios.post(url, data);
-      const {accessToken} = res;
+      const { data: res } = await axios.post(url, data); // Destructure 'data' directly from the response
+      const { accessToken } = res;
+      // You can use accessToken as needed, if needed for further logic
 
-      navigate("/login");
+      navigate("/login"); // Redirect to login after successful registration
     } catch (error) {
       if (
         error.response &&
         error.response.status >= 400 &&
         error.response.status <= 500
       ) {
-        setError(error.response.data.message);
+        setError(error.response.data.message); // Show error message
       }
     }
   };
@@ -68,7 +70,7 @@ const Register = () => {
             style={backgroundStyling}
           >
             <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label style={labelStyling}>Username</Form.Label>
                   <Form.Control
@@ -102,6 +104,18 @@ const Register = () => {
                     onChange={handleChange}
                   />
                 </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                  <Form.Text className="text-muted pt-1">
+                    Already have an account?
+                    <span>
+                      <Link to="/login" style={labelStyling}>
+                        {" "}
+                        Log in
+                      </Link>
+                    </span>
+                  </Form.Text>
+                </Form.Group>
+                
                 <div class="form-check form-switch">
                   <input
                     class="form-check-input"
@@ -127,7 +141,6 @@ const Register = () => {
                 <Button
                   variant="primary"
                   type="submit"
-                  onClick={handleSubmit}
                   style={buttonStyling}
                   className="mt-2"
                 >
